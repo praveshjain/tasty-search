@@ -48,7 +48,6 @@ class Search(object):
 
     @staticmethod
     def create_document(index, data_type, data, id):
-        print data
         url = 'http://{IP}:{PORT}/{INDEX}/{TYPE}/{ID}'.format(IP=Settings.ELASTIC_IP, PORT=Settings.ELATIC_PORT, INDEX=Constants.INDEX_NAME, TYPE=data_type, ID=id)
         return requests.put(url, auth=Search.get_basic_auth(), json=data)
 
