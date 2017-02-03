@@ -1,11 +1,9 @@
 from .. import Constants
-from ..Search import Search
 from ..Entities.Review import Review
-import json
+from ..Search import Search
 
 
 class Feeder(object):
-
     @staticmethod
     def parse():
         index = 0
@@ -28,12 +26,6 @@ class Feeder(object):
                     index += 1
                     review = Review(curr_data)
                     resp = Search.create_document(Constants.INDEX_NAME, Constants.DATA_TYPE, review.to_dict(), index)
-                    if resp.status_code != 200 and resp.status_code != 201:
-                        print review
-                        print resp
-                        print resp.text
 
-        print "*" * 100
-        print "Total", index
 
 Feeder.parse()
