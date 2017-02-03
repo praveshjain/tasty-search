@@ -30,7 +30,7 @@ class Review(object):
         return json.loads(json.dumps(self, default=self.default_dict))
 
     def __repr__(self):
-        return self.to_dict()
+        return json.dumps(self, default=self.default_dict)
 
 # review = Review()
 # review.product_id = 'product-001'
