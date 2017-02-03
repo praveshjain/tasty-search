@@ -28,7 +28,7 @@ class Feeder(object):
                     index += 1
                     review = Review(curr_data)
                     resp = Search.create_document(Constants.INDEX_NAME, Constants.DATA_TYPE, review.to_dict(), index)
-                    if resp.status_code != 200 or resp.status_code != 201:
+                    if resp.status_code != 200 and resp.status_code != 201:
                         print review
                         print resp
                         print resp.text
