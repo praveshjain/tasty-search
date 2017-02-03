@@ -28,8 +28,10 @@ class Feeder(object):
                     index += 1
                     review = Review(curr_data)
                     resp = Search.create_document(Constants.INDEX_NAME, Constants.DATA_TYPE, review.to_dict(), index)
-                    print resp
-                    print resp.text
+                    if resp.status_code != 200:
+                        print review
+                        print resp
+                        print resp.text
 
         print "*" * 100
         print "Total", index
