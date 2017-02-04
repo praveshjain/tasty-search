@@ -65,7 +65,7 @@ class Search(object):
     @staticmethod
     def search_string(string):
         tokens = Search.tokenise(string)
-        results = Search.seach_tokens(tokens, 'text', 20)
+        results = Search.seach_tokens(tokens, Constants.SEARCH_FIELD_REVIEW, 20)
         Search.standardise_results(results, tokens)
         return results
 

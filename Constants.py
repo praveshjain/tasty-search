@@ -7,3 +7,4 @@ DATA_SEPARATOR = ':'
 
 INDEX_NAME = 'restaurant'
 DATA_TYPE = 'review'
+SEARCH_FIELD_REVIEW = 'text'
