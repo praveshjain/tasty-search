@@ -6,6 +6,8 @@ from requests.auth import HTTPBasicAuth
 import Constants
 import Settings
 
+import random
+
 
 class Search(object):
     @staticmethod
@@ -54,7 +56,7 @@ class Search(object):
         if resp.status_code != 200:
             raise LookupError("Something went wrong. Please try again later.")
         results = json.loads(resp.text)
-        return results.get('hits', []).get('hits', [])
+        return results.get('hits', {}).get('hits', [])
 
     @staticmethod
     def standardise_results(results, tokens):
@@ -74,6 +76,15 @@ class Search(object):
         url = 'http://{IP}:{PORT}/{INDEX}/{TYPE}/{ID}'.format(IP=Settings.ELASTIC_IP, PORT=Settings.ELASTIC_PORT, INDEX=Constants.INDEX_NAME, TYPE=data_type, ID=id)
         return requests.put(url, auth=Search.get_basic_auth(), json=data)
 
-        # resp = Search.seach_tokens(['pravesh', 'jain'], 'text')
-        # print resp
-        # print resp.text
+    @staticmethod
+    def get_random_token():
+        id = random.randint(1, Constants.NUM_DOCUMENTS)
+        url = 'http://{IP}:{PORT}/{INDEX}/{TYPE}/{ID}'.format(IP=Settings.ELASTIC_IP, PORT=Settings.ELASTIC_PORT, INDEX=Constants.INDEX_NAME, TYPE=Constants.DATA_TYPE, ID=id)
+        resp = requests.get(url, auth=Search.get_basic_auth())
+        document = json.loads(resp.text)
+        result = document.get('_source', {})
+        if document.get('found'):
+            text = document.get('_source').get('text', '')
+            tokens = Search.tokenise(text)
+            return tokens[random.randint(0, len(tokens) - 1)]
+        return ''
