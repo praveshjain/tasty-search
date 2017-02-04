@@ -3,7 +3,7 @@ from .. import Settings
 from ..Search import Search
 import random
 
-NUM_QUERIES = 1
+NUM_QUERIES = 100000
 output_file = open(Settings.HOME + "/../data/load.txt", 'w')
 for i in xrange(NUM_QUERIES):
     tokens_needed = random.randint(1, Constants.QUERY_MAX_TOKENS)
