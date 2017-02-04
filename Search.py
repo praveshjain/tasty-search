@@ -82,9 +82,9 @@ class Search(object):
         url = 'http://{IP}:{PORT}/{INDEX}/{TYPE}/{ID}'.format(IP=Settings.ELASTIC_IP, PORT=Settings.ELASTIC_PORT, INDEX=Constants.INDEX_NAME, TYPE=Constants.DATA_TYPE, ID=id)
         resp = requests.get(url, auth=Search.get_basic_auth())
         document = json.loads(resp.text)
-        result = document.get('_source', {})
         if document.get('found'):
             text = document.get('_source').get('text', '')
             tokens = Search.tokenise(text)
-            return tokens[random.randint(0, len(tokens) - 1)]
+            if tokens:
+                return tokens[random.randint(0, len(tokens) - 1)]
         return ''
