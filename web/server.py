@@ -20,15 +20,9 @@ def index():
 def search():
     string = ''
     if request.method == 'GET':
-        string = request.args.get('query')
+        string = request.args.get('query', '')
     elif request.method == 'POST':
-        # import pdb; pdb.set_trace()
-        # print request.form
-        # print request.json
-        # print request.data
         string = request.form.get('query', '')
-
-    print string
 
     try:
         results = Search.search_string(string)
