@@ -37,13 +37,18 @@ class Search(object):
 
     # @param : List of Strings
     @staticmethod
-    def seach_tokens(tokens, field_name, size=None):
+    def search_tokens(tokens, field_name, size=None):
         payload = {
             "query": {
                 "bool": {
                     "should": []
                 }
-            }
+            },
+            "sort": [
+                {"_score": "desc"},
+                {"score": "desc"}
+            ],
+            "track_scores": True
         }
 
         if size:
@@ -63,11 +68,13 @@ class Search(object):
         length = len(tokens)
         for result in results:
             result['_score'] /= length
+            if 'sort' in result:
+                del result['sort']
 
     @staticmethod
     def search_string(string):
         tokens = Search.tokenise(string)
-        results = Search.seach_tokens(tokens, Constants.SEARCH_FIELD_REVIEW, 20)
+        results = Search.search_tokens(tokens, Constants.SEARCH_FIELD_REVIEW, 20)
         Search.standardise_results(results, tokens)
         return results
 
@@ -80,11 +87,14 @@ class Search(object):
     def get_random_token():
         id = random.randint(1, Constants.NUM_DOCUMENTS)
         url = 'http://{IP}:{PORT}/{INDEX}/{TYPE}/{ID}'.format(IP=Settings.ELASTIC_IP, PORT=Settings.ELASTIC_PORT, INDEX=Constants.INDEX_NAME, TYPE=Constants.DATA_TYPE, ID=id)
-        resp = requests.get(url, auth=Search.get_basic_auth())
-        document = json.loads(resp.text)
-        if document.get('found'):
-            text = document.get('_source').get('text', '')
-            tokens = Search.tokenise(text)
-            if tokens:
-                return tokens[random.randint(0, len(tokens) - 1)]
+        try:
+            resp = requests.get(url, auth=Search.get_basic_auth())
+            document = json.loads(resp.text)
+            if document.get('found'):
+                text = document.get('_source').get('text', '')
+                tokens = Search.tokenise(text)
+                if tokens:
+                    return tokens[random.randint(0, len(tokens) - 1)]
+        except:
+            pass
         return ''
